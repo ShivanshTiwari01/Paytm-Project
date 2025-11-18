@@ -12,7 +12,9 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
     ) as JwtPayload & {
       userId: string;
     };
+
     req.userId = decoded.userId;
+
     next();
   } catch (error) {
     return res.status(401).json({
@@ -21,3 +23,5 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
+
+export default auth;

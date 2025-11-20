@@ -19,9 +19,9 @@ export const signInSchema = z.object({
 
 export const updateUserSchema = z.object({
   body: z.object({
-    firstName: z.string().min(4, 'Name must be atleast two characters'),
-    latName: z.string(),
-    password: z.string().min(8, 'Password must be alteast 8 characters'),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    password: z.string().optional(),
   }),
 });
 

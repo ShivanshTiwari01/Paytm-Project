@@ -5,7 +5,7 @@ import generateToken from '../../helpers/auth';
 
 export const signUp = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password } = req.body();
+    const { firstName, lastName, email, password } = req.body;
 
     const existingUser = await User.findOne({
       email,
@@ -83,6 +83,15 @@ export const signIn = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
+    const { firstName, lastName, password } = req.body;
+
+    if (!firstName && !lastName && !password) {
+      return res.status(404).json({
+        success: false,
+        message: 'No data provided for updation',
+      });
+    }
+
     const userExists = await User.findById(req.userId);
 
     if (!userExists) {
@@ -102,6 +111,41 @@ export const updateUser = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       message: 'User updated successfully',
+    });
+  } catch (error) {
+    return res.status(404).json({
+      success: false,
+      message: 'Something went wrong',
+    });
+  }
+};
+
+export const filterUser = async (req: Request, res: Response) => {
+  try {
+    const { filter } = req.query || '';
+
+    const users = await User.find({
+      $or: [
+        {
+          firstName: {
+            $regex: filter,
+          },
+        },
+        {
+          lastName: {
+            $regex: filter,
+          },
+        },
+      ],
+    });
+
+    return res.status(200).json({
+      user: users.map((user) => ({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        _id: user._id,
+      })),
     });
   } catch (error) {
     return res.status(404).json({

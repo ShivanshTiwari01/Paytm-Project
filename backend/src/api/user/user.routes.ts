@@ -21,4 +21,6 @@ router.put(
   controller.updateUser
 );
 
+router.get('/user/bulk', auth, controller.filterUser);
+
 export default router;

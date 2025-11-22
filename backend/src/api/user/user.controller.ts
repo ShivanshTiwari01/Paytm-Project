@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import User from '../../models/user.model';
 import generateToken from '../../helpers/auth';
+
+import User from '../../models/user.model';
+import Account from '../../models/account.model';
 
 export const signUp = async (req: Request, res: Response) => {
   try {
@@ -25,6 +27,11 @@ export const signUp = async (req: Request, res: Response) => {
       lastName,
       email,
       password: hashedPassword,
+    });
+
+    await Account.create({
+      userId: user._id,
+      balance: 1 + Math.random() * 10000,
     });
 
     const token = generateToken(user._id.toString());

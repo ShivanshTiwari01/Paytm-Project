@@ -10,17 +10,12 @@ import {
 
 const router = express.Router();
 
-router.post('/user/signup', validate(createUserSchema), controller.signUp);
+router.post('/signup', validate(createUserSchema), controller.signUp);
 
-router.post('/user/signin', validate(signInSchema), controller.signIn);
+router.post('/signin', validate(signInSchema), controller.signIn);
 
-router.put(
-  '/user/update',
-  auth,
-  validate(updateUserSchema),
-  controller.updateUser
-);
+router.put('/update', auth, validate(updateUserSchema), controller.updateUser);
 
-router.get('/user/bulk', auth, controller.filterUser);
+router.get('/bulk', auth, controller.filterUser);
 
 export default router;

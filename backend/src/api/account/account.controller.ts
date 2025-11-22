@@ -4,11 +4,13 @@ import Account from '../../models/account.model';
 
 export const getUserBalance = async (req: Request, res: Response) => {
   try {
-    const userBalance = await Account.findById(req.userId);
+    const userBalance: any = await Account.findOne({
+      userId: req.userId,
+    });
 
     return res.status(200).json({
       success: true,
-      balance: userBalance,
+      balance: userBalance.balance,
     });
   } catch (error) {
     return res.status(404).json({
@@ -25,7 +27,9 @@ export const transfer = async (req: Request, res: Response) => {
 
     const { amount, to } = req.body;
 
-    const account = await Account.findById(req.userId).session(session);
+    const account = await Account.findOne({
+      userId: req.userId,
+    }).session(session);
 
     if (!account || account.balance < amount) {
       await session.abortTransaction();
@@ -35,7 +39,9 @@ export const transfer = async (req: Request, res: Response) => {
       });
     }
 
-    const toAccount = await Account.findById(to).session(session);
+    const toAccount = await Account.findOne({
+      userId: to,
+    }).session(session);
 
     if (!toAccount) {
       await session.abortTransaction();

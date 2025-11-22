@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import chalk from 'chalk';
 import connectDB from './src/config/db';
 
 import userRouter from './src/api/user/user.routes';
@@ -11,6 +12,15 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 const app = express();
+
+app.use((req, res, next) => {
+  console.log(
+    chalk.cyan(`[${new Date().toLocaleTimeString()}]`),
+    chalk.yellow(req.method),
+    chalk.green(req.originalUrl)
+  );
+  next();
+});
 
 app.use(cors());
 app.use(express.json());

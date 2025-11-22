@@ -20,7 +20,7 @@ export const signUp = async (req: Request, res: Response) => {
       });
     }
 
-    const hashedPassword = bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user: any = await User.create({
       firstName,
@@ -64,7 +64,7 @@ export const signIn = async (req: Request, res: Response) => {
       });
     }
 
-    const success = bcrypt.compare(password, existingUser.password);
+    const success = await bcrypt.compare(password, existingUser.password);
 
     if (!success) {
       return res.status(500).json({
@@ -75,12 +75,13 @@ export const signIn = async (req: Request, res: Response) => {
 
     const token = generateToken(existingUser._id.toString());
 
-    return res.send(200).json({
+    return res.status(200).json({
       success: true,
       message: 'User logged in successfully',
       token,
     });
   } catch (error) {
+    console.log(error);
     return res.status(404).json({
       success: false,
       message: 'Something went wrong',
